@@ -1,0 +1,4 @@
+# Requirements for the JIRA Integration Project
+
+fastapi==0.68.0
+uvicorn==0.15.0
