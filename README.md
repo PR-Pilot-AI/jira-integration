@@ -1,35 +1,28 @@
-<div align="center">
-<img src="https://avatars.githubusercontent.com/ml/17635?s=140&v=" width="100" alt="PR Pilot Logo">
-</div>
-<p align="center">
-  <a href="https://github.com/apps/pr-pilot-ai/installations/new"><b>Install</b></a> |
-  <a href="https://docs.pr-pilot.ai">Documentation</a> | 
-  <a href="https://www.pr-pilot.ai/blog">Blog</a> | 
-  <a href="https://www.pr-pilot.ai">Website</a>
-</p>
+# PR Pilot Demo: LLM-Based Technical Refinement for JIRA Tickets
 
-# Smart Project Starter
+## Overview
+This project demonstrates how [PR Pilot](https://www.pr-pilot.ai) easily integrates with other services. It uses FastAPI to create a web server that listens for incoming webhook requests.
+The webhook handler reacts if a new label `needs-refinement` is added to a JIRA issue. It then instructs PR Pilot to
+act as a technical lead for the issue. PR Pilot will autonomously:
 
-This project comes with **[Smart Workflows](https://github.com/PR-Pilot-AI/smart-workflows/tree/main)** that use an AI agent
-to automate Github projects in powerful ways.
+1. Read the JIRA ticket and find code references
+2. Find the relevant code and understand it in the context of the ticket
+3. Add a comment to the ticket with a technical refinement
 
-* **Plug-and-play** - Install new automations and tools with the click of a button
-* **Fully Customizable** using natural language instructions.
-* **LLM Best Practices** baked in, so you can focus on what matters
 
-## Using the Template
+## Environment Variables
+- `JIRA_API_TOKEN`: The API token used to authenticate requests to the JIRA API. This is necessary for the application to interact with JIRA.
+- `JIRA_API_USER`: The email address associated with the JIRA account. This is used to authenticate requests to the JIRA API.
+- `JIRA_API_ENDPOINT`: The base URL of the JIRA instance. This is used to construct the URLs for the JIRA API requests.
+- `PR_PILOT_API_TOKEN`: The API token used to authenticate requests to the PR Pilot API. This is necessary for the application to interact with PR Pilot.
+- `GITHUB_REPO`: The name of the GitHub repository.
 
-1. Create a **[new Github project using this template](https://github.com/new?template_name=smart-project-starter&template_owner=PR-Pilot-AI)**
-2. **[Install the AI agent](https://github.com/apps/pr-pilot-ai/installations/new)** on your repository
+## Setup
+1. Clone the repository.
+2. Install the required dependencies using `pip install -r requirements.txt`.
+3. Set the necessary environment variables.
+4. Run the application using `fastapi dev main.py` to start the FastAPI server.
 
-## Importing Tools and Automations
-
-Open the `Actions` tab 
-
-<img src="github_tabs.png" width="350" alt="Actions Tab">
-
-Run the **`🔄 Import Smart Workflow`** and enter the ID of the **[Smart Workflow](https://github.com/PR-Pilot-AI/smart-workflows/tree/main)** you'd like to import:
-
-![Import Workflow](github_run_workflow.png)
-
-A new PR will be created that contains your imported workflow and ideas for how to customize for your project's needs.
+## Usage
+The application is set up to receive webhook events at the root URL (`/`).
+To trigger the webhook handler, add the label `needs-refinement` to a JIRA issue.
