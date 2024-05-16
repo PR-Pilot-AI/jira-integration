@@ -2,3 +2,4 @@
 
 fastapi==0.68.0
 uvicorn==0.15.0
+pr-pilot==0.1.0
