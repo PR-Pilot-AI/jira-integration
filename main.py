@@ -10,6 +10,20 @@ JIRA_API_TOKEN = os.getenv('JIRA_API_TOKEN')
 
 logger = logging.getLogger(__name__)
 
+PROMPT = ("I have a JIRA ticket with the following description:\n---\n{issue_description}\n---\n"
+          "The issue needs to be refined with technical context. Pretend like you are the technical lead of the project and do the refinement:\n"
+          "1. If the ticket mentions file paths, read the files\n"
+          "2. If the ticket contains references to functions/classes/etc, search with ripgrep and read the relevant files\n"
+          "3. Respond with your comment.\n\n"
+          "Your comment should:\n"
+          "- Be short and concise\n"
+          "- Contain functional and non-functional requirements\n"
+          "- Include links (complete Github URLs) to the relevant files in the codebase\n\n"
+          "Return your plain comment in JIRA Text Formatting Notation:\n\n"
+          "- To create a header, place `hn. ` at the start of the line (where n can be a number from 1-6).\n"
+          "- To create a link, use `[text|URL]`.\n"
+          "- To create a code block, use {code}...{code}.\n"
+          "- For monospaced inline text, use {{monospaced}}.\n")
 
 @app.post("/")
 async def jira_webhook(request: Request):
@@ -22,22 +36,7 @@ async def jira_webhook(request: Request):
     added_label = payload.get('changelog', {}).get('items', [{}])[0].get('toString', 'No label added')
     if added_label == 'needs-refinement':
         logger.info(f"Received JIRA webhook for issue {issue_key} with added label {added_label}")
-        prompt = (f"I have a JIRA ticket with the following description:\n---\n{issue_description}\n---\n"
-                  f"The issue needs to be refined with technical context. Pretend like you are the technical lead of the project and do the refinement:\n"
-                  f"1. If the ticket mentions file paths, read the files\n"
-                  f"2. If the ticket contains references to functions/classes/etc, search with ripgrep and read the relevant files\n"
-                  f"3. Respond with your comment.\n\n"
-                  f"Your comment should:\n"
-                  f"- Be short and concise\n"
-                  f"- Contain functional and non-functional requirements\n"
-                  f"- Include links (complete Github URLs) to the relevant files in the codebase\n\n"
-                  f"Return your plain comment in JIRA Text Formatting Notation:\n\n"
-                  f"- To create a header, place `hn. ` at the start of the line (where n can be a number from 1-6).\n"
-                  f"- To create a link, use `[text|URL]`.\n"
-                  "- To create a code block, use {code}...{code}.\n"
-                  "- For monospaced inline text, use {{monospaced}}.\n")
-        task = create_task("PR-Pilot-AI/pr-pilot", prompt)
-        new_issue_description = wait_for_result(task)
+        new_issue_description = PROMPT.format(issue_description=issue_description)
 
 
         jira = JIRA('https://mlamina.atlassian.net', basic_auth=('mlamina09@gmail.com', JIRA_API_TOKEN))
