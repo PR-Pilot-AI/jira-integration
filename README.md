@@ -1,9 +1,17 @@
 # PR Pilot Demo: LLM-Based Technical Refinement for JIRA Tickets
 
-## Overview
-This project demonstrates how [PR Pilot](https://www.pr-pilot.ai) easily integrates with other services. It uses FastAPI to create a web server that listens for incoming webhook requests.
+## Demo Video
+
+[![Watch the video](https://img.youtube.com/vi/3F_MID7CiXg/maxresdefault.jpg)](https://youtu.be/3F_MID7CiXg)
+
+## Use Case
+This project demonstrates how [PR Pilot](https://www.pr-pilot.ai) can be used to easily automate some of your workflows in JIRA.
+
+The demo uses FastAPI to create a web server that listens for incoming webhook requests.
 The webhook handler reacts if a new label `needs-refinement` is added to a JIRA issue. It then instructs PR Pilot to
-act as a technical lead for the issue. PR Pilot will autonomously:
+act as a technical lead for the issue.
+
+PR Pilot will **autonomously**:
 
 1. Read the JIRA ticket and find code references
 2. Find the relevant code and understand it in the context of the ticket
